@@ -49,12 +49,12 @@ public class EstadisticasTxt {
 		for(int i=0;i<directoriosAnualesDoc.length;i++){
 			String ruta = directoriosAnualesDoc[i].getAbsolutePath() + "\\estadistica.txt";
 			
-			String[] lista = leerTxt(ruta);
+			String[] listaRegistros = leerTxt(ruta);
 			
 			ArrayList<EstadisticaDia> listaEstadisticaAnual = new ArrayList<EstadisticaDia>();
-			for(int j=0;j<lista.length;j++){
+			for(int j=0;j<listaRegistros.length;j++){
 				
-				EstadisticaDia estadistica = new EstadisticaDia(lista[j]);
+				EstadisticaDia estadistica = new EstadisticaDia(listaRegistros[j]);
 				listaEstadisticaAnual.add(estadistica);
 				listaEstadisticaTotalDoc.add(estadistica);
 			}
@@ -67,7 +67,7 @@ public class EstadisticasTxt {
 			
 		}
 		
-		crearTxt(listaEstadisticaTotalDoc, "Documentacion");
+		crearTxt(listaEstadisticaTotalDoc, "Documentacion", rutaDoc);
 		
 		for(int i=0;i<directoriosAnualesUrgencias.length;i++){
 			String ruta = directoriosAnualesUrgencias[i].getAbsolutePath() + "\\estadistica.txt";
@@ -88,7 +88,7 @@ public class EstadisticasTxt {
 			}
 		}
 		
-		crearTxt(listaEstadisticaTotalUrg, "Urgencias");
+		crearTxt(listaEstadisticaTotalUrg, "Urgencias", rutaUrgencias);
 		
 		for(int i=0;i<directoriosAnualesXedoc.length;i++){
 			String ruta = directoriosAnualesXedoc[i].getAbsolutePath() + "\\estadistica.txt";
@@ -109,12 +109,15 @@ public class EstadisticasTxt {
 			}
 		}
 		
-		crearTxt(listaEstadisticaTotalXed, "Xedoc");
+		crearTxt(listaEstadisticaTotalXed, "Xedoc", rutaXedoc);
+		
+
 	}
 	
 	
 	private File[] getDirectoriosAnuales(String ruta){
 		
+		// Devuelve la ruta a las carpetas anuales
 		
 		// aplicar un filtro de solo carpetas
 		
@@ -136,9 +139,14 @@ public class EstadisticasTxt {
 		}
 		
 		File[] carpetasFinales = new File[numAños];
-		for(int i=0;i<numAños;i++){
-			carpetasFinales[i] = carpetas[i];
+		for(int i=0;i<carpetas.length;i++){
+			if(carpetas[i].getName().length() == 4 && 
+					(carpetas[i].getName().charAt(0) == '2' && carpetas[i].getName().charAt(1) == '0')){
+				
+				carpetasFinales[i] = carpetas[i];
+			}
 		}
+		
 		
 		return carpetasFinales;
 	}
@@ -188,13 +196,13 @@ public class EstadisticasTxt {
 		return cadenaSinOrdenar;
 	}
 
-	private void crearTxt(ArrayList<EstadisticaDia> lista, String nombreCarpeta){
+	private void crearTxt(ArrayList<EstadisticaDia> lista, String nombreCarpeta, String ruta){
 		
 		FileWriter fichero = null;
         PrintWriter pw = null;
         try
         {
-            fichero = new FileWriter("D:\\Prometeo\\estadisticas\\ " + nombreCarpeta + ".txt" );
+            fichero = new FileWriter(ruta + "\\" + nombreCarpeta + ".txt" );
 
             
             pw = new PrintWriter(fichero);

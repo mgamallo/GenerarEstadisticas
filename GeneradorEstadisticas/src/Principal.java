@@ -1,5 +1,6 @@
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.PrintWriter;
@@ -30,8 +31,8 @@ public class Principal {
 		principal.printCarpetas(directoriosAnualesXedoc);
 		
 		
-		/*
-		 
+		
+		/* 
 		for(int i=0;i<directoriosAnualesUrgencias.length;i++){
 			File[] carpetasMeses = principal.getDirectoriosMensuales(directoriosAnualesUrgencias[i].getAbsolutePath());
 			
@@ -39,12 +40,20 @@ public class Principal {
 			for(int j=0;j<carpetasMeses.length;j++){
 				System.out.println(carpetasMeses[j].getName());
 				
-				File[] carpetasDias = carpetasMeses[j].listFiles();
+				File[] carpetasDias = carpetasMeses[j].listFiles(new FileFilter() {
+					
+					@Override
+					public boolean accept(File pathname) {
+						// TODO Auto-generated method stub
+						return pathname.isDirectory();
+					}
+				});
 				for(int z=0;z<carpetasDias.length;z++){
 					
 					File ficheroEstadistica = new File(carpetasDias[z].getAbsoluteFile() + "\\estadistica.txt");
 					
-					
+					System.out.println("Comprobamos que el fichero existe: ");
+					System.out.println(ficheroEstadistica.getAbsolutePath());
 					if(!ficheroEstadistica.exists()){
 						
 						String nombreCarpeta = carpetasDias[z].getName();
@@ -68,17 +77,26 @@ public class Principal {
 			System.out.println();
 		}
 		
-		
+		*/
 
 		
-		for(int i=0;i<directoriosAnualesDoc.length;i++){
+	//	for(int i=0;i<directoriosAnualesDoc.length;i++){
+		for(int i=1;i<directoriosAnualesDoc.length;i++){
 			File[] carpetasMeses = principal.getDirectoriosMensuales(directoriosAnualesDoc[i].getAbsolutePath());
 			
 			System.out.println(directoriosAnualesDoc[i].getName());
-			for(int j=0;j<carpetasMeses.length;j++){
+	//		for(int j=0;j<carpetasMeses.length;j++){
+			for(int j=5;j<carpetasMeses.length;j++){
 				System.out.println(carpetasMeses[j].getName());
 				
-				File[] carpetasDias = carpetasMeses[j].listFiles();
+				File[] carpetasDias = carpetasMeses[j].listFiles(new FileFilter() {
+					
+					@Override
+					public boolean accept(File pathname) {
+						// TODO Auto-generated method stub
+						return pathname.isDirectory();
+					}
+				});
 				System.out.println("Numero de carpetas: " + carpetasDias.length );
 				for(int z=0;z<carpetasDias.length;z++){
 					
@@ -113,7 +131,14 @@ public class Principal {
 			System.out.println(directoriosAnualesXedoc[i].getName());
 			for(int j=0;j<carpetasMeses.length;j++){
 				System.out.println(carpetasMeses[j].getName());
-				File[] carpetasDias = carpetasMeses[j].listFiles();
+				File[] carpetasDias = carpetasMeses[j].listFiles(new FileFilter() {
+					
+					@Override
+					public boolean accept(File pathname) {
+						// TODO Auto-generated method stub
+						return pathname.isDirectory();
+					}
+				});
 				for(int z=0;z<carpetasDias.length;z++){
 					
 					File ficheroEstadistica = new File(carpetasDias[z].getAbsoluteFile() + "\\estadistica.txt");
@@ -139,7 +164,7 @@ public class Principal {
 			}
 			System.out.println();
 		}
-		*/
+		
 		
 		
 		for(int i=0;i<directoriosAnualesUrgencias.length;i++){
@@ -420,7 +445,14 @@ public class Principal {
 	
 	private File[] getDirectoriosAnuales(String ruta){
 		
-		File[] carpetas = new File(ruta).listFiles();
+		File[] carpetas = new File(ruta).listFiles(new FileFilter() {
+			
+			@Override
+			public boolean accept(File file) {
+				// TODO Auto-generated method stub
+				return file.isDirectory();
+			}
+		});
 		int numAños = 0;
 		
 		for(int i=0;i<carpetas.length;i++){
@@ -431,8 +463,12 @@ public class Principal {
 		}
 		
 		File[] carpetasFinales = new File[numAños];
-		for(int i=0;i<numAños;i++){
-			carpetasFinales[i] = carpetas[i];
+		for(int i=0;i<carpetas.length;i++){
+			if(carpetas[i].getName().length() == 4 && 
+					(carpetas[i].getName().charAt(0) == '2' && carpetas[i].getName().charAt(1) == '0')){
+				
+				carpetasFinales[i] = carpetas[i];
+			}
 		}
 		
 		return carpetasFinales;
@@ -469,6 +505,8 @@ public class Principal {
 	
 	
 	private EstadisticaDia getNumeroDeDocumentosSubidosDia( File rutaDia){
+		
+		System.out.println(rutaDia);
 		
 		int numeroArchivos = 0;
 		EstadisticaDia estadisticaDia;
